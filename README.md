@@ -47,10 +47,13 @@
 
 ```bash
 # Pick any library / Escolha qualquer biblioteca
-go get github.com/junhinhow/charm-wizard
-go get github.com/junhinhow/charm-themes
-go get github.com/junhinhow/charm-test
+go get github.com/junhinhow/charm-wizard@v0.1.0
+go get github.com/junhinhow/charm-themes@v0.1.0
+go get github.com/junhinhow/charm-test@v0.1.0
 ```
+
+Todas as 18 bibliotecas estão publicadas em **`v0.1.0`** — cada uma com tag, release e notas de versão.
+Todas as 18 libraries are published as **`v0.1.0`** — each with a tag, release and release notes.
 
 Each repo has its own `README.md` with a minimal working example. / Cada repo tem seu próprio `README.md` com um exemplo mínimo funcional.
 
