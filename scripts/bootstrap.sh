@@ -5,10 +5,43 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LIBS_DIR="$ROOT_DIR/libs"
 
 REPOS=(
-  charm-banner charm-charts charm-color charm-devtools charm-dialog
-  charm-diff charm-form charm-i18n charm-layout charm-nav charm-notify
-  charm-palette charm-spinner charm-table-cli charm-test charm-themes
-  charm-toast charm-wizard
+  charm-a11y
+  charm-banner
+  charm-charts
+  charm-cli
+  charm-color
+  charm-command
+  charm-config
+  charm-devtools
+  charm-dialog
+  charm-diff
+  charm-form
+  charm-fuzzy
+  charm-gallery
+  charm-i18n
+  charm-image
+  charm-input
+  charm-json
+  charm-keys
+  charm-layout
+  charm-lint
+  charm-logs
+  charm-mock
+  charm-nav
+  charm-notify
+  charm-palette
+  charm-panes
+  charm-progress
+  charm-record
+  charm-router
+  charm-spinner
+  charm-store
+  charm-table-cli
+  charm-test
+  charm-themes
+  charm-toast
+  charm-update
+  charm-wizard
 )
 
 echo "==> Charm Suite bootstrap"
@@ -31,7 +64,7 @@ done
 echo
 echo "==> Generating go.work"
 {
-  echo "go 1.27.0"
+  echo "go 1.25.8"
   echo
   echo "use ("
   for repo in "${REPOS[@]}"; do

@@ -7,10 +7,7 @@ $ErrorActionPreference = 'Stop'
 $Libs = Join-Path $Root 'libs'
 
 $Repos = @(
-    'charm-banner','charm-charts','charm-color','charm-devtools','charm-dialog',
-    'charm-diff','charm-form','charm-i18n','charm-layout','charm-nav','charm-notify',
-    'charm-palette','charm-spinner','charm-table-cli','charm-test','charm-themes',
-    'charm-toast','charm-wizard'
+    'charm-a11y','charm-banner','charm-charts','charm-cli','charm-color','charm-command','charm-config','charm-devtools','charm-dialog','charm-diff','charm-form','charm-fuzzy','charm-gallery','charm-i18n','charm-image','charm-input','charm-json','charm-keys','charm-layout','charm-lint','charm-logs','charm-mock','charm-nav','charm-notify','charm-palette','charm-panes','charm-progress','charm-record','charm-router','charm-spinner','charm-store','charm-table-cli','charm-test','charm-themes','charm-toast','charm-update','charm-wizard'
 )
 
 Write-Host "==> Charm Suite bootstrap"
@@ -32,7 +29,7 @@ foreach ($repo in $Repos) {
 
 Write-Host
 Write-Host "==> Generating go.work"
-$lines = @('go 1.27.0', '', 'use (')
+$lines = @('go 1.25.8', '', 'use (')
 foreach ($repo in $Repos) { $lines += "    .\libs\$repo" }
 $lines += ')'
 $goWork = Join-Path $Root 'go.work'
@@ -47,5 +44,3 @@ Write-Host "==> Done. Next steps:"
 Write-Host "    cd $Root"
 Write-Host "    go build ./libs/...   # build every lib"
 Write-Host "    (cd libs/charm-diff; go test ./...)   # run one lib's tests"
-Write-Host
-Write-Host "    See scripts/README.md for more."
