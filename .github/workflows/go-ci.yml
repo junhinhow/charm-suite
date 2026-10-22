@@ -1,0 +1,126 @@
+name: Go CI (reusable)
+
+# Workflow reutilizável da Charm Suite.
+# Chamado pelos repositórios `charm-*` assim:
+#
+#   jobs:
+#     ci:
+#       uses: junhinhow/charm-suite/.github/workflows/go-ci.yml@main
+#
+# Para matriz de sistemas operacionais:
+#
+#   jobs:
+#     ci:
+#       strategy:
+#         fail-fast: false
+#         matrix:
+#           os: [ubuntu-latest, windows-latest, macos-latest]
+#       uses: junhinhow/charm-suite/.github/workflows/go-ci.yml@main
+#       with:
+#         os: ${{ matrix.os }}
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: Runner do GitHub Actions.
+        type: string
+        default: ubuntu-latest
+      go-version-file:
+        description: Arquivo de onde ler a versão do Go.
+        type: string
+        default: go.mod
+      race:
+        description: Rodar os testes com o detector de corrida.
+        type: boolean
+        default: true
+      coverage:
+        description: Gerar e publicar o arquivo de cobertura.
+        type: boolean
+        default: true
+      lint:
+        description: Rodar o golangci-lint (não bloqueante).
+        type: boolean
+        default: true
+      working-directory:
+        description: Diretório de trabalho dentro do repositório.
+        type: string
+        default: .
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build, vet and test (${{ inputs.os }})
+    runs-on: ${{ inputs.os }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ inputs.working-directory }}/${{ inputs.go-version-file }}
+          cache: true
+          cache-dependency-path: ${{ inputs.working-directory }}/go.sum
+
+      - name: Verify gofmt
+        shell: bash
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "Arquivos fora do gofmt:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        shell: bash
+        run: |
+          if [ "${{ inputs.race }}" = "true" ]; then
+            go test ./... -race -coverprofile=coverage.out -covermode=atomic
+          else
+            go test ./... -coverprofile=coverage.out
+          fi
+
+      - name: Upload coverage
+        if: ${{ inputs.coverage }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ inputs.os }}
+          path: ${{ inputs.working-directory }}/coverage.out
+          if-no-files-found: ignore
+
+  lint:
+    name: Lint
+    if: ${{ inputs.lint }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ inputs.working-directory }}/${{ inputs.go-version-file }}
+          cache: true
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.8
+          args: --timeout=5m
+        continue-on-error: true
