@@ -5,6 +5,7 @@
 
 # Verification scratchpads
 /_verify/
+.planning/
 *.exe
 
 # OS
