@@ -35,6 +35,12 @@ módulo com `go build ./...`, `go vet ./...` e `go test -race ./...`, usando
 - Commits pequenos e Conventional Commits são preferíveis a commits artificiais
   ou vazios.
 
+## Fonte canônica
+
+O Forgejo (`forgejo.multiservidores.com.br/ajr`) é a fonte canônica. O GitHub
+recebe o mesmo commit depois da validação no Forgejo. O repositório Rust
+`ajr/CharmSuite-Rust` é independente e não faz parte deste workspace Go.
+
 ## Estado publicado
 
 Na verificação de 23/10/2026, os módulos estavam publicados no GitHub com tags
